@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from "react";
-import { flexRender, Table } from "@tanstack/react-table";
+import { flexRender, Table, ColumnSort } from "@tanstack/react-table";
 import { Patient, PatientTableViewProps } from "../../../types/user";
 import PaginationView from "../ui/paginationView";
 import Modal from "../ui/modal";
@@ -11,8 +11,11 @@ import {
   Users,
   Hash,
   CheckCircle,
-  XCircle 
+  XCircle,
+  ChevronUp,
+  ChevronDown
 } from "lucide-react";
+
 
 export default function PatientTableView({
     tableInstance,
@@ -73,19 +76,26 @@ export default function PatientTableView({
         onEditClose();
       }
     };
+
+    const toggleSort = (columnId: string) => {
+      const column = tableInstance.getColumn(columnId);
+      if (column) {
+        column.toggleSorting(column.getIsSorted() === 'asc');
+      }
+    };
   
     return (
       <div className="bg-[#f7f8fc] p-6 rounded-lg">
-        <div className="mb-6 relative">
+        <div className="mb-6 relative group">
           <input
             type="text"
             placeholder="Search patients..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="w-[70%] p-3 pl-10 rounded-lg border border-[#e3e5f2]"
+            className="w-[70%] p-3 pl-10 rounded-lg border border-[#e3e5f2] transition-all duration-300 focus:w-[80%] focus:ring-2 focus:ring-[#3f488d] focus:border-transparent outline-none"
           />
           <svg
-            className="w-5 h-5 absolute left-3 top-3.5 text-[#8685ac]"
+            className="w-5 h-5 absolute left-3 top-3.5 text-[#8685ac] transition-transform duration-300 group-focus-within:scale-110"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -107,22 +117,36 @@ export default function PatientTableView({
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
-                      className="p-4 text-left text-sm font-semibold text-[#8685ac] bg-white"
+                      className="p-4 text-left text-sm font-semibold text-[#8685ac] bg-white transition-colors duration-200 hover:bg-[#f7f8fc] cursor-pointer"
                       colSpan={header.colSpan}
+                      onClick={() => header.column.getCanSort() && toggleSort(header.column.id)}
                     >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(header.column.columnDef.header, header.getContext())}
+                      <div className="flex items-center space-x-2">
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(header.column.columnDef.header, header.getContext())}
+                        {header.column.getCanSort() && (
+                          <span className="flex flex-col">
+                            <ChevronUp 
+                              className={`w-4 h-4 ${header.column.getIsSorted() === 'asc' ? 'text-[#3f488d]' : 'text-gray-400'}`} 
+                            />
+                            <ChevronDown 
+                              className={`w-4 h-4 -mt-1 ${header.column.getIsSorted() === 'desc' ? 'text-[#3f488d]' : 'text-gray-400'}`} 
+                            />
+                          </span>
+                        )}
+                      </div>
                     </th>
                   ))}
                 </tr>
               ))}
             </thead>
             <tbody>
-              {tableInstance.getRowModel().rows.map((row) => (
+              {tableInstance.getRowModel().rows.map((row, index) => (
                 <tr
                   key={row.id}
-                  className="hover:bg-[#e3e5f2] transition-colors border-b border-[#e3e5f2] last:border-0"
+                  className="border-b border-[#e3e5f2] last:border-0 hover:bg-[#e3e5f2] transition-colors duration-200 animate-slide-in"
+                  style={{ animationDelay: `${index * 50}ms` }}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id} className="p-4 text-sm text-[#a9acaf] align-middle">
@@ -148,12 +172,13 @@ export default function PatientTableView({
           <Modal
             isOpen={viewModalId !== null}
             onClose={onViewClose}
-            title="View Patient" 
+            title="View Patient"
             titleClassName="text-black"
+            className="animate-fade-in"
             footer={
               <button
                 onClick={onViewClose}
-                className="px-4 py-2 bg-[#3f488d] text-white rounded hover:bg-[#2e3570] transition-colors"
+                className="px-4 py-2 bg-[#3f488d] text-white rounded hover:bg-[#2e3570] transition-transform duration-200 hover:scale-105"
               >
                 Close
               </button>
@@ -161,52 +186,55 @@ export default function PatientTableView({
           >
             {patients.find((p) => p.id === viewModalId) && (
               <div className="space-y-3 bg-gradient-to-br from-[#e3e5f2] via-[#f7f8fc] to-[#d1d5eb] p-4 rounded relative overflow-hidden">
-                <div className="absolute inset-0 opacity-20 pointer-events-none" style={{
-                  backgroundImage: `radial-gradient(circle at 2px 2px, #3f488d 1px, transparent 0)`,
-                  backgroundSize: '20px 20px'
-                }}></div>
+                <div
+                  className="absolute inset-0 opacity-20 pointer-events-none"
+                  style={{
+                    backgroundImage: `radial-gradient(circle at 2px 2px, #3f488d 1px, transparent 0)`,
+                    backgroundSize: "20px 20px",
+                  }}
+                ></div>
                 {(() => {
                   const patient = patients.find((p) => p.id === viewModalId)!;
                   return (
                     <>
-                      <div className="flex items-center space-x-2 hover:bg-[#e3e5f2] p-2 rounded transition-colors">
-                        <Hash className="w-5 h-5 text-[#3f488d]" />
+                      <div className="flex items-center space-x-2 p-2 rounded transition-all duration-200 hover:bg-[#e3e5f2] hover:pl-4">
+                        <Hash className="w-5 h-5 text-[#3f488d] transition-transform duration-200 hover:scale-110" />
                         <p className="text-[#2e3570]">
                           <strong>ID:</strong> {patient.id}
                         </p>
                       </div>
-                      <div className="flex items-center space-x-2 hover:bg-[#e3e5f2] p-2 rounded transition-colors">
-                        <User className="w-5 h-5 text-[#3f488d]" />
+                      <div className="flex items-center space-x-2 p-2 rounded transition-all duration-200 hover:bg-[#e3e5f2] hover:pl-4">
+                        <User className="w-5 h-5 text-[#3f488d] transition-transform duration-200 hover:scale-110" />
                         <p className="text-[#2e3570]">
                           <strong>First Name:</strong> {patient.firstName}
                         </p>
                       </div>
-                      <div className="flex items-center space-x-2 hover:bg-[#e3e5f2] p-2 rounded transition-colors">
-                        <User className="w-5 h-5 text-[#3f488d]" />
+                      <div className="flex items-center space-x-2 p-2 rounded transition-all duration-200 hover:bg-[#e3e5f2] hover:pl-4">
+                        <User className="w-5 h-5 text-[#3f488d] transition-transform duration-200 hover:scale-110" />
                         <p className="text-[#2e3570]">
                           <strong>Last Name:</strong> {patient.lastName}
                         </p>
                       </div>
-                      <div className="flex items-center space-x-2 hover:bg-[#e3e5f2] p-2 rounded transition-colors">
-                        <User className="w-5 h-5 text-[#3f488d]" />
+                      <div className="flex items-center space-x-2 p-2 rounded transition-all duration-200 hover:bg-[#e3e5f2] hover:pl-4">
+                        <User className="w-5 h-5 text-[#3f488d] transition-transform duration-200 hover:scale-110" />
                         <p className="text-[#2e3570]">
                           <strong>Age:</strong> {patient.age}
                         </p>
                       </div>
-                      <div className="flex items-center space-x-2 hover:bg-[#e3e5f2] p-2 rounded transition-colors">
-                        <Users className="w-5 h-5 text-[#3f488d]" />
+                      <div className="flex items-center space-x-2 p-2 rounded transition-all duration-200 hover:bg-[#e3e5f2] hover:pl-4">
+                        <Users className="w-5 h-5 text-[#3f488d] transition-transform duration-200 hover:scale-110" />
                         <p className="text-[#2e3570]">
                           <strong>Gender:</strong> {patient.gender}
                         </p>
                       </div>
-                      <div className="flex items-center space-x-2 hover:bg-[#e3e5f2] p-2 rounded transition-colors">
-                        <Stethoscope className="w-5 h-5 text-[#3f488d]" />
+                      <div className="flex items-center space-x-2 p-2 rounded transition-all duration-200 hover:bg-[#e3e5f2] hover:pl-4">
+                        <Stethoscope className="w-5 h-5 text-[#3f488d] transition-transform duration-200 hover:scale-110" />
                         <p className="text-[#2e3570]">
                           <strong>Diagnosis:</strong> {patient.diagnosis}
                         </p>
                       </div>
-                      <div className="flex items-center space-x-2 hover:bg-[#e3e5f2] p-2 rounded transition-colors">
-                        <Calendar className="w-5 h-5 text-[#3f488d]" />
+                      <div className="flex items-center space-x-2 p-2 rounded transition-all duration-200 hover:bg-[#e3e5f2] hover:pl-4">
+                        <Calendar className="w-5 h-5 text-[#3f488d] transition-transform duration-200 hover:scale-110" />
                         <p className="text-[#2e3570]">
                           <strong>Admission Date:</strong> {patient.admissionDate}
                         </p>
@@ -223,19 +251,20 @@ export default function PatientTableView({
           <Modal
             isOpen={editModalId !== null}
             onClose={onEditClose}
-            title="Edit Patient" 
+            title="Edit Patient"
             titleClassName="text-black"
+            className="animate-fade-in"
             footer={
               <div className="flex space-x-2">
                 <button
                   onClick={onEditClose}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-transform duration-200 hover:scale-105"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleEditSubmit}
-                  className="px-4 py-2 bg-[#3f488d] text-white rounded hover:bg-[#2e3570] transition-colors"
+                  className="px-4 py-2 bg-[#3f488d] text-white rounded hover:bg-[#2e3570] transition-transform duration-200 hover:scale-105"
                 >
                   Save
                 </button>
@@ -244,37 +273,40 @@ export default function PatientTableView({
           >
             {editFormData && (
               <div className="space-y-4 bg-gradient-to-br from-[#e3e5f2] via-[#f7f8fc] to-[#d1d5eb] p-4 rounded relative overflow-hidden">
-                <div className="absolute inset-0 opacity-20 pointer-events-none" style={{
-                  backgroundImage: `radial-gradient(circle at 2px 2px, #3f488d 1px, transparent 0)`,
-                  backgroundSize: '20px 20px'
-                }}></div>
-                <div className="flex items-center space-x-2">
-                  <User className="w-5 h-5 text-[#3f488d]" />
+                <div
+                  className="absolute inset-0 opacity-20 pointer-events-none"
+                  style={{
+                    backgroundImage: `radial-gradient(circle at 2px 2px, #3f488d 1px, transparent 0)`,
+                    backgroundSize: "20px 20px",
+                  }}
+                ></div>
+                <div className="flex items-center space-x-2 transition-all duration-200 hover:pl-4">
+                  <User className="w-5 h-5 text-[#3f488d] transition-transform duration-200 hover:scale-110" />
                   <input
                     name="firstName"
                     value={editFormData.firstName}
                     onChange={handleEditChange}
-                    className="w-full p-2 border rounded text-[#2e3570]"
+                    className="w-full p-2 border rounded text-[#2e3570] focus:ring-2 focus:ring-[#3f488d] focus:border-transparent outline-none transition-all duration-200"
                     placeholder="First Name"
                   />
                 </div>
-                <div className="flex items-center space-x-2">
-                  <User className="w-5 h-5 text-[#3f488d]" />
+                <div className="flex items-center space-x-2 transition-all duration-200 hover:pl-4">
+                  <User className="w-5 h-5 text-[#3f488d] transition-transform duration-200 hover:scale-110" />
                   <input
                     name="lastName"
                     value={editFormData.lastName}
                     onChange={handleEditChange}
-                    className="w-full p-2 border rounded text-[#2e3570]"
+                    className="w-full p-2 border rounded text-[#2e3570] focus:ring-2 focus:ring-[#3f488d] focus:border-transparent outline-none transition-all duration-200"
                     placeholder="Last Name"
                   />
                 </div>
-                <div className="flex items-center space-x-2">
-                  <User className="w-5 h-5 text-[#3f488d]" />
+                <div className="flex items-center space-x-2 transition-all duration-200 hover:pl-4">
+                  <User className="w-5 h-5 text-[#3f488d] transition-transform duration-200 hover:scale-110" />
                   <input
                     name="age"
                     value={editFormData.age}
                     onChange={handleEditChange}
-                    className="w-full p-2 border rounded text-[#2e3570]"
+                    className="w-full p-2 border rounded text-[#2e3570] focus:ring-2 focus:ring-[#3f488d] focus:border-transparent outline-none transition-all duration-200"
                     placeholder="Age"
                     type="number"
                   />
@@ -283,25 +315,27 @@ export default function PatientTableView({
             )}
           </Modal>
         )}
+  
         {showConfirmModal && (
           <Modal
             isOpen={showConfirmModal}
             onClose={() => setShowConfirmModal(false)}
             title="Confirm Changes"
+            className="animate-fade-in"
             footer={
               <div className="flex space-x-2">
                 <button
                   onClick={() => setShowConfirmModal(false)}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors flex items-center"
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-transform duration-200 hover:scale-105 flex items-center"
                 >
-                  <XCircle className="w-5 h-5 mr-2" />
+                  <XCircle className="w-5 h-5 mr-2 transition-transform duration-200 group-hover:rotate-90" />
                   Cancel
                 </button>
                 <button
                   onClick={confirmEditSave}
-                  className="px-4 py-2 bg-[#3f488d] text-white rounded hover:bg-[#2e3570] transition-colors flex items-center"
+                  className="px-4 py-2 bg-[#3f488d] text-white rounded hover:bg-[#2e3570] transition-transform duration-200 hover:scale-105 flex items-center"
                 >
-                  <CheckCircle className="w-5 h-5 mr-2" />
+                  <CheckCircle className="w-5 h-5 mr-2 transition-transform duration-200 group-hover:scale-110" />
                   Confirm
                 </button>
               </div>

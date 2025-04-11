@@ -45,6 +45,7 @@ export interface ModalProps {
     children: ReactNode;
     footer?: ReactNode; 
     titleClassName?: string;
+    className?: string;
 }
 
 export interface PatientTableViewProps {
