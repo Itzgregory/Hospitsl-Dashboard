@@ -1,0 +1,182 @@
+[
+    {
+      "id": 1,
+      "firstName": "Chinedu",
+      "lastName": "Okonkwo",
+      "age": 34,
+      "gender": "Male",
+      "diagnosis": "Malaria",
+      "admissionDate": "2025-03-15"
+    },
+    {
+      "id": 2,
+      "firstName": "Amina",
+      "lastName": "Adeleke",
+      "age": 28,
+      "gender": "Female",
+      "diagnosis": "Typhoid",
+      "admissionDate": "2025-04-01"
+    },
+    {
+      "id": 3,
+      "firstName": "Oluwaseun",
+      "lastName": "Bello",
+      "age": 45,
+      "gender": "Male",
+      "diagnosis": "Diabetes",
+      "admissionDate": "2025-02-20"
+    },
+    {
+      "id": 4,
+      "firstName": "Chioma",
+      "lastName": "Okafor",
+      "age": 32,
+      "gender": "Female",
+      "diagnosis": "Hypertension",
+      "admissionDate": "2025-03-10"
+    },
+    {
+      "id": 5,
+      "firstName": "Ibrahim",
+      "lastName": "Mohammed",
+      "age": 50,
+      "gender": "Male",
+      "diagnosis": "Arthritis",
+      "admissionDate": "2025-01-05"
+    },
+    {
+      "id": 6,
+      "firstName": "Folake",
+      "lastName": "Balogun",
+      "age": 22,
+      "gender": "Female",
+      "diagnosis": "Asthma",
+      "admissionDate": "2025-04-05"
+    },
+    {
+      "id": 7,
+      "firstName": "Emeka",
+      "lastName": "Nwachukwu",
+      "age": 38,
+      "gender": "Male",
+      "diagnosis": "Pneumonia",
+      "admissionDate": "2025-03-22"
+    },
+    {
+      "id": 8,
+      "firstName": "Adanna",
+      "lastName": "Eze",
+      "age": 29,
+      "gender": "Female",
+      "diagnosis": "Anemia",
+      "admissionDate": "2025-02-15"
+    },
+    {
+      "id": 9,
+      "firstName": "Yusuf",
+      "lastName": "Abubakar",
+      "age": 41,
+      "gender": "Male",
+      "diagnosis": "Kidney Stones",
+      "admissionDate": "2025-03-01"
+    },
+    {
+      "id": 10,
+      "firstName": "Ngozi",
+      "lastName": "Okafor",
+      "age": 35,
+      "gender": "Female",
+      "diagnosis": "Migraine",
+      "admissionDate": "2025-03-18"
+    },
+    {
+      "id": 11,
+      "firstName": "Adebayo",
+      "lastName": "Ogunlesi",
+      "age": 27,
+      "gender": "Male",
+      "diagnosis": "Fractured Arm",
+      "admissionDate": "2025-04-02"
+    },
+    {
+      "id": 12,
+      "firstName": "Blessing",
+      "lastName": "Uche",
+      "age": 31,
+      "gender": "Female",
+      "diagnosis": "UTI",
+      "admissionDate": "2025-03-25"
+    },
+    {
+      "id": 13,
+      "firstName": "Obinna",
+      "lastName": "Ibe",
+      "age": 48,
+      "gender": "Male",
+      "diagnosis": "High Blood Pressure",
+      "admissionDate": "2025-01-20"
+    },
+    {
+      "id": 14,
+      "firstName": "Ebere",
+      "lastName": "Okafor",
+      "age": 26,
+      "gender": "Female",
+      "diagnosis": "Pregnancy",
+      "admissionDate": "2025-03-30"
+    },
+    {
+      "id": 15,
+      "firstName": "Chukwudi",
+      "lastName": "Okafor",
+      "age": 52,
+      "gender": "Male",
+      "diagnosis": "Stroke",
+      "admissionDate": "2025-02-10"
+    },
+    {
+      "id": 16,
+      "firstName": "Aisha",
+      "lastName": "Yusuf",
+      "age": 33,
+      "gender": "Female",
+      "diagnosis": "Bronchitis",
+      "admissionDate": "2025-04-03"
+    },
+    {
+      "id": 17,
+      "firstName": "Okechukwu",
+      "lastName": "Okoro",
+      "age": 44,
+      "gender": "Male",
+      "diagnosis": "Gastritis",
+      "admissionDate": "2025-03-12"
+    },
+    {
+      "id": 18,
+      "firstName": "Ifeoma",
+      "lastName": "Okafor",
+      "age": 37,
+      "gender": "Female",
+      "diagnosis": "Appendicitis",
+      "admissionDate": "2025-02-28"
+    },
+    {
+      "id": 19,
+      "firstName": "Musa",
+      "lastName": "Bello",
+      "age": 58,
+      "gender": "Male",
+      "diagnosis": "Heart Disease",
+      "admissionDate": "2025-01-15"
+    },
+    {
+      "id": 20,
+      "firstName": "Temitope",
+      "lastName": "Adeyemi",
+      "age": 30,
+      "gender": "Female",
+      "diagnosis": "Sinusitis",
+      "admissionDate": "2025-03-05"
+    }
+  ]
