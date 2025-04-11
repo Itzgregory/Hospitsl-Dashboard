@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from "react";
-import { flexRender, Table, ColumnSort } from "@tanstack/react-table";
+import { flexRender, Table } from "@tanstack/react-table";
 import { Patient, PatientTableViewProps } from "../../../types/user";
 import PaginationView from "../ui/paginationView";
 import Modal from "../ui/modal";
