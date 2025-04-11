@@ -16,7 +16,6 @@ import {
   ChevronDown
 } from "lucide-react";
 
-
 export default function PatientTableView({
     tableInstance,
     currentPage,
@@ -92,7 +91,7 @@ export default function PatientTableView({
             placeholder="Search patients..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="w-[70%] p-3 pl-10 rounded-lg border border-[#e3e5f2] transition-all duration-300 focus:w-[80%] focus:ring-2 focus:ring-[#3f488d] focus:border-transparent outline-none"
+            className="w-full sm:w-[70%] p-3 pl-10 rounded-lg border border-[#e3e5f2] transition-all duration-300 focus:w-full sm:focus:w-[80%] focus:ring-2 focus:ring-[#3f488d] focus:border-transparent outline-none"
           />
           <svg
             className="w-5 h-5 absolute left-3 top-3.5 text-[#8685ac] transition-transform duration-300 group-focus-within:scale-110"
@@ -111,33 +110,36 @@ export default function PatientTableView({
   
         <div ref={tableRef} className="overflow-x-auto bg-white rounded-lg shadow">
           <table className="min-w-full border-collapse">
-            <thead>
+            <thead className="sticky top-0 bg-white z-10 shadow-sm">
               {tableInstance.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id} className="border-b border-[#e3e5f2]">
-                  {headerGroup.headers.map((header) => (
-                    <th
-                      key={header.id}
-                      className="p-4 text-left text-sm font-semibold text-[#8685ac] bg-white transition-colors duration-200 hover:bg-[#f7f8fc] cursor-pointer"
-                      colSpan={header.colSpan}
-                      onClick={() => header.column.getCanSort() && toggleSort(header.column.id)}
-                    >
-                      <div className="flex items-center space-x-2">
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(header.column.columnDef.header, header.getContext())}
-                        {header.column.getCanSort() && (
-                          <span className="flex flex-col">
-                            <ChevronUp 
-                              className={`w-4 h-4 ${header.column.getIsSorted() === 'asc' ? 'text-[#3f488d]' : 'text-gray-400'}`} 
-                            />
-                            <ChevronDown 
-                              className={`w-4 h-4 -mt-1 ${header.column.getIsSorted() === 'desc' ? 'text-[#3f488d]' : 'text-gray-400'}`} 
-                            />
-                          </span>
-                        )}
-                      </div>
-                    </th>
-                  ))}
+                  {headerGroup.headers.map((header) => {
+                    const isHiddenOnMobile = ['id', 'age', 'gender', 'diagnosis',].includes(header.column.id);
+                    return (
+                      <th
+                        key={header.id}
+                        className={`p-4 text-left text-sm font-semibold text-[#8685ac] bg-white transition-colors duration-200 hover:bg-[#f7f8fc] cursor-pointer whitespace-nowrap ${isHiddenOnMobile ? 'hidden sm:table-cell' : ''}`}
+                        colSpan={header.colSpan}
+                        onClick={() => header.column.getCanSort() && toggleSort(header.column.id)}
+                      >
+                        <div className="flex items-center space-x-2">
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(header.column.columnDef.header, header.getContext())}
+                          {header.column.getCanSort() && (
+                            <span className="flex flex-col">
+                              <ChevronUp 
+                                className={`w-4 h-4 ${header.column.getIsSorted() === 'asc' ? 'text-[#3f488d]' : 'text-gray-400'}`} 
+                              />
+                              <ChevronDown 
+                                className={`w-4 h-4 -mt-1 ${header.column.getIsSorted() === 'desc' ? 'text-[#3f488d]' : 'text-gray-400'}`} 
+                              />
+                            </span>
+                          )}
+                        </div>
+                      </th>
+                    );
+                  })}
                 </tr>
               ))}
             </thead>
@@ -148,11 +150,17 @@ export default function PatientTableView({
                   className="border-b border-[#e3e5f2] last:border-0 hover:bg-[#e3e5f2] transition-colors duration-200 animate-slide-in"
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
-                  {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id} className="p-4 text-sm text-[#a9acaf] align-middle">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </td>
-                  ))}
+                  {row.getVisibleCells().map((cell) => {
+                    const isHiddenOnMobile = [ 'id', 'age', 'gender', 'diagnosis',].includes(cell.column.id);
+                    return (
+                      <td
+                        key={cell.id}
+                        className={`p-4 text-sm text-[#a9acaf] align-middle whitespace-nowrap ${isHiddenOnMobile ? 'hidden sm:table-cell' : ''}`}
+                      >
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </td>
+                    );
+                  })}
                 </tr>
               ))}
             </tbody>
